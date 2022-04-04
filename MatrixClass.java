@@ -1,3 +1,18 @@
+/**
+ * Christian Badoy
+ * CS 3310
+ * Professor Luu
+ * 03 April 2022
+ * 
+ * Project: Matrix Multiplication
+ * The purpose of this project is to code and visualize the runtime of three forms of Matrix Multiplication:
+ * 1. Classical
+ * 2. Naive
+ * 3. Strassen's
+ * 
+ * This file is the MatrixClass file to hold the method calls for conducting Matrix Multiplication.
+ */
+
 import java.util.Random;
 
 public class MatrixClass 
@@ -7,6 +22,8 @@ public class MatrixClass
 	private int size;
 	private Random rand;
 
+
+	// Initialize a MatrixClass
 	public MatrixClass(int si)
 	{
 		size = si;
@@ -16,11 +33,13 @@ public class MatrixClass
 		matrixTwo = matTwo;
 		rand = new Random();
 	}
-
+	// Generates a random Matrix containing numbers from (-9) to (+9).
 	public void generateMatrix()
 	{
 		Random secRand = new Random();
 		int neg = 0;
+		
+		// Traverse through each matrix slot in Matrix A and insert a random number.
 		for(int ro = 0; ro < matrixOne.length ; ro++)
 			for(int co = 0; co < matrixOne[ro].length ; co++)
 				{
@@ -37,7 +56,7 @@ public class MatrixClass
 					}
 					matrixOne[ro][co] = (int) (rand.nextInt(10) * neg);
 				}
-		
+		// Traverse through each matrix slot in Matrix B and insert a random number.
 		for(int ro = 0; ro < matrixTwo.length ; ro++)
 			for(int co = 0; co < matrixTwo[ro].length ; co++)
 				{
@@ -56,6 +75,7 @@ public class MatrixClass
 				}
 	}
 
+	// Returns Matrix A.
 	public int[][] getFirstMatrix()
 	{
 		int[][] tempMatrix = new int[matrixOne.length][matrixOne[0].length];
@@ -67,6 +87,7 @@ public class MatrixClass
 		return tempMatrix;
 	}
 
+	// Returns Matrix B.
 	public int[][] getSecondMatrix()
 	{
 		int[][] tempMatrix = new int[matrixTwo.length][matrixTwo[0].length];
@@ -78,6 +99,8 @@ public class MatrixClass
 		return tempMatrix;
 	}
 
+	// Prints any Matrix onto Console.
+	// int[][] mat is the Matrix that is to be printed.
 	public static void printMatrix(int[][] mat)
 	{
 		for(int i = 0; i < mat.length; i++)
@@ -89,6 +112,9 @@ public class MatrixClass
 				}
 	}
 
+
+	// Method that conducts Classical Matrix Multiplication
+	// Three for loops means that its Runtime can be estimated with Theta(n^3).
 	public int[][] calcClassicMultMatrix()
 	{
 		int[][] newMatrix = new int[matrixOne.length][matrixOne[0].length];
@@ -100,6 +126,9 @@ public class MatrixClass
 					}
 		return newMatrix;
 	}
+
+	// Method that conducts Classical Matrix Multiplication for Sanity Check.
+	// Three for loops means that its Runtime can be estimated with Omega(n^3).
 	public int[][] calcClassicMultMatrix(int[][] matrixOne, int[][] matrixTwo)
 	{
 		int[][] newMatrix = new int[matrixOne.length][matrixOne[0].length];
@@ -111,6 +140,13 @@ public class MatrixClass
 					}
 		return newMatrix;
 	}
+
+	// Method that conducts Naive Matrix Multiplication.
+	// Has 8 recursive method calls to itself with size n/2
+	// Makes 8T(n/2).
+	// Has partitionMatrix() and combineMatrix() with two for loops to traverse partitioned Matrix. (Theta(n^2)).
+	// Combined makes T(n) = 8T(n/2) + Theta(n^2).
+	// By Master's Theorem, order is estimated to be at O(n^log_2(8)) or O(n^3).
 	public int[][] calcDivConMatrix(int[][] matOne, int[][] matTwo)
 	{
 		int[][] newMatrix = new int[matOne.length][matOne[0].length];
@@ -153,7 +189,13 @@ public class MatrixClass
 		return newMatrix;
 		
 	}
+	
 
+	// Method that conducts Strassen's matrix Multiplication.
+	// Does 7 recursive calls with size n/2, making 7T(n/2).
+	// An additional Theta(n^2) time complexity is included for partitionMatrix() and combineMatrix()
+	// Results to time complexity of T(n) = 7(n/2) + Theta(n^2).
+	// Time complexity is O(n^log_2(7)) or O(n^2.81).
 	public int[][] strassen(int[][] matOne, int[][] matTwo)
 	{
 		int[][] newMatrix = new int[matOne.length][matOne[0].length];
@@ -215,6 +257,8 @@ public class MatrixClass
 
 		return newMatrix;
 	}
+
+	// Helper Method that partitions the original matrix into a quadrant.
 	private void partitionMatrix(int[][] mainMat,int[][] partMat, int ro, int co)
 	{
 		for(int i = 0, row = ro; i < partMat.length; i++, row++)
@@ -223,6 +267,7 @@ public class MatrixClass
 
 	}
 	
+	// Helper method that combines a quadrant back to a larger matrix size.
 	private void combineMatrix(int[][] mainMat, int[][] partMat, int ro, int co)
 	{
 		for(int i = 0, row = ro; i < partMat.length; i++, row++)
@@ -232,6 +277,8 @@ public class MatrixClass
 			}
 		
 	}
+
+	// Helper method that conducts Matrix Addition.
 	private int[][] matrixAdd(int[][] matOne, int[][] matTwo)
 	{
 		int[][] tempMat = new int[matOne.length][matOne[0].length];
@@ -243,6 +290,7 @@ public class MatrixClass
 		return tempMat;
 	}
 
+	// Helper Method that conducts Matrix Subtraction.
 	private int[][] matrixSub(int[][] matOne, int[][] matTwo)
 	{
 		int[][] tempMat = new int[matOne.length][matOne[0].length];
@@ -254,6 +302,7 @@ public class MatrixClass
 		return tempMat;
 	}
 	
+	// Static method that prints sanity check to the console.
 	public static void sanityCheck()
 	{
 		MatrixClass temp = new MatrixClass(4);
